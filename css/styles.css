@@ -2,39 +2,41 @@ h1, h2, h3, h4, h5, h6, p, span, div, input {
     font-family: 'Roboto';
 }
 
-ul{
+ul {
     padding:0;
     margin:0;
+    display: inline-block;
+    padding-right:10px;
 }
 
-li{
+li {
     list-style:none;
     min-height:20px;
     margin:1px;
-    border:solid orange 1px;
+    border:solid black 1px;
     cursor:move;
-    width: 200px;
+    width:150px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
 }
 
-li.type{
+li.type {
     background-color:#fff;
     height:50px;
     position: relative;
     padding: 5px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
     border:solid #064d80 1px;
     border-radius:3px;
     background-color: #c4dff3;
     cursor:default;
 }
 
-li.type input{
+li.type input {
     cursor:pointer;
 }
 
-.close{
+.close {
     position:absolute;
     top:4;
     right:4;
@@ -52,6 +54,14 @@ li.type input{
   top:-1px;
 }
 
+.item .close {
+    width:15px;
+    height:15px;
+    top:2;
+    right:2;
+    font-size:12;
+}
+
 .drag {
     width:40px;
     height:30px;
@@ -62,26 +72,40 @@ li.type input{
     cursor:move;
 }
 
-.test{
-    background-color:red;
+.helper {
+    padding:5px;
+    border:solid 1px black;
+    border-radius:5px;
+    max-width:200px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 li.item:hover {
     background-color:yellow;
 }
 
-li.empty{
+li.empty {
     background-color:#ddd;
     border-color:#eee;
     cursor:default;
 }
 
-li.over{
-    background-color:blue;
+li.over {
+    border: 1px solid #dad55e;
+	background: #fffa90;
+	color: #777620;
+}
+
+div.main {
+    white-space:nowrap;
 }
 
 div.section {
-    float:left;
+    display:inline-block;
+    white-space:nowrap;
+    vertical-align:top;
 }
 
 div.hour {
