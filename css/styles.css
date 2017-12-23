@@ -1,0 +1,95 @@
+h1, h2, h3, h4, h5, h6, p, span, div, input {
+    font-family: 'Roboto';
+}
+
+ul{
+    padding:0;
+    margin:0;
+}
+
+li{
+    list-style:none;
+    min-height:20px;
+    margin:1px;
+    border:solid orange 1px;
+    cursor:move;
+    width: 200px;
+}
+
+li.type{
+    background-color:#fff;
+    height:50px;
+    position: relative;
+    padding: 5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    border:solid #064d80 1px;
+    border-radius:3px;
+    background-color: #c4dff3;
+    cursor:default;
+}
+
+li.type input{
+    cursor:pointer;
+}
+
+.close{
+    position:absolute;
+    top:4;
+    right:4;
+    cursor:pointer;
+    background-color:red;
+    width:20px;
+    height:20px;
+    text-align:center;
+    color:white;
+    border-radius:3px;
+}
+.close:before {
+  content: '✕';
+  position:relative;
+  top:-1px;
+}
+
+.drag {
+    width:40px;
+    height:30px;
+    background:url(../images/drag-icon.png);
+    position:absolute;
+    top:-5;
+    left:90;
+    cursor:move;
+}
+
+.test{
+    background-color:red;
+}
+
+li.item:hover {
+    background-color:yellow;
+}
+
+li.empty{
+    background-color:#ddd;
+    border-color:#eee;
+    cursor:default;
+}
+
+li.over{
+    background-color:blue;
+}
+
+div.section {
+    float:left;
+}
+
+div.hour {
+    height:61px;
+    width:50px;
+    margin:1px;
+    border:solid black 1px;
+    background-color:gold;
+    padding-top:5px;
+    padding-left:5px;
+}
