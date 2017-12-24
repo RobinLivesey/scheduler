@@ -4,7 +4,7 @@ var scheduler = {
     
     columns: 3,
     
-    hourStart: 6,
+    hourStart: 7,
     hourEnd: 22,
     
     slotHeight: 20,
@@ -36,7 +36,7 @@ var scheduler = {
         this.setTypesHTML();
         
         //Add a new type
-        $('#add_new_type').on('click', function() {
+        $('#add_new_type').off().on('click', function() {
             var name = $('#new_type').val();
             $('#new_type').val('');
             if (name.trim() !== '') {
@@ -45,18 +45,117 @@ var scheduler = {
             }
         });
         
-        $('#save').on('click', function() {
-            var data = {s: that.slots, t: that.types};
-            $('#save_json').html(JSON.stringify(data));
+        //Output JSON code
+        $('#save').off().on('click', function() {
+            for (var i = 0; i < that.columns; i++) {
+                that.saveSlotOrder(i);
+            }
+            var code = that.createSaveCode();
+            $('#save_code').val(code);
         });
+        
+        //Load data from JSON code
+        $('#load').off().on('click', function() {
+            var code = $('#save_code').val();
+            if (code) {
+                that.load(code);
+            }
+        });
+        
+        //var code = '{"t":[[1,"Scheduler improvements","#90EE90",1],[2,"Math course","#8bc7ea",2],[3,"Advent of code","#f25c5c",3],[4,"Reading","#f6c442",4],[5,"Research","#f07bef",5]],"s":[[34,27,1,2,0],[36,28,3,2,0],[40,31,4,1,0],[55,25,5,2,0],[57,24,2,2,0],[60,21,4,1,0],[74,18,3,2,0],[81,14,1,3,0],[87,15,2,2,0],[89,20,1,2,0]]}';
+        //this.load(code);
+    },
+    
+    createSaveCode: function() {
+        var data = {t: [], s: []};
+        for (var id in this.types) {
+            var type = [
+                parseInt(id), 
+                this.types[id].name, 
+                this.types[id].color, 
+                this.types[id].ord
+            ];
+            data.t.push(type);
+        }
+        for (var id in this.slots) {
+            if (!this.slots[id].empty) {
+                var slot = [
+                    parseInt(id), 
+                    this.slots[id].ord, 
+                    this.slots[id].typeId, 
+                    this.slots[id].size, 
+                    this.slots[id].columnId
+                ];
+                data.s.push(slot);
+            }
+        }
+        return JSON.stringify(data);
+    },
+    
+    load: function(code) {
+        var data = JSON.parse(code);
+        this.slots = {};
+        this.types = {};
+        
+        //Load types and slots
+        for (var i = 0; i < data.t.length; i++) {
+            this.types[data.t[i][0]] = {
+                name: data.t[i][1],
+                color: data.t[i][2],
+                ord: data.t[i][3]
+            };
+        }
+        for (var i = 0; i < data.s.length; i++) {
+            this.slots[data.s[i][0]] = {
+                ord: data.s[i][1],
+                typeId: data.s[i][2],
+                size: data.s[i][3],
+                columnId: data.s[i][4]
+            };
+        }
+        
+        //Add in empty slots (they are removed from the code to keep it shorter)
+        for (var i = 0; i < this.columns; i++) {
+            var slots = this.getSlots(i);
+            var ord = 0;
+            for (var j = 0; j < slots.length; j++) {
+                ++ord;
+                if (ord < slots[j].ord) {
+                    //Add empty slots above this slot..
+                    for (var k = ord; k < slots[j].ord; k++) {
+                        var id = this.getNextSlotId();
+                        this.slots[id] = {empty: true, ord: ord++, columnId: i};
+                    }
+                }
+            }
+            //Add empty slots at the end
+            var slots = this.getSlots(i);
+            var count = ((this.hourEnd - this.hourStart + 1) * 3);
+            for (var j = 0; j < slots.length; j++) {
+                if (slots[j].size) {
+                    count -= slots[j].size;
+                } else {
+                    count -= 1;
+                }
+            }
+            for (var k = 0; k < count; k++) {
+                var id = this.getNextSlotId();
+                this.slots[id] = {empty: true, ord: ++ord, columnId: i};
+            }
+        }
+        
+        //Re-init
+        this.init();
+    },
+    
+    getNextTypeId: function() {
+        var ids = Object.keys(this.types);
+        return ids.length ? Math.max(...ids.map(Number)) + 1 : 1;
     },
     
     createType: function(name) {
         var type = {name: name, color: '#90EE90'};
-        
-        //Set id to next unique
-        var ids = Object.keys(this.types);
-        var id = ids.length ? Math.max(...ids.map(Number)) + 1 : 1;
+        var id = this.getNextTypeId();
         
         //Set ord to last
         var types = this.getTypes();
@@ -117,7 +216,6 @@ var scheduler = {
                     style: 'background-color:' + that.types[typeId].color
                 });
             },
-            handle: '.drag',
             cursorAt: {top:10, left: 0}
         });
         
@@ -138,6 +236,11 @@ var scheduler = {
             
             that.setSlotsHTML();
         });
+    },
+    
+    getNextSlotId: function() {
+        var ids = Object.keys(this.slots);
+        return ids.length ? Math.max(...ids.map(Number)) + 1 : 1;
     },
     
     updateSlotType: function(slotId, typeId) {
@@ -329,9 +432,7 @@ var scheduler = {
                 var columnId = i;
             }
             for (var j = 0; j < count; j++) {
-                //Get next slot Id
-                var ids = Object.keys(this.slots);
-                var id = ids.length ? Math.max(...ids.map(Number)) + 1 : 1;
+                var id = this.getNextSlotId();
                 this.slots[id] = {empty: true, ord: 0, columnId: columnId};
                 
                 //Get HTML for empty slot

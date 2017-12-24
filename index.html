@@ -4,6 +4,7 @@
 <head>
 	<title>Scheduler</title>
     <meta charset="UTF-8">
+    <link rel="icon" href="images/star.ico">
     <link rel="stylesheet" href="css/styles.css" type="text/css">
     <link rel="stylesheet" href="libs/jquery-ui-1.12.1.custom/jquery-ui.min.css" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
@@ -24,7 +25,8 @@
         </div>
         <div class="section">
             <input id="save" type="button" value="Save">
-            <span id="save_json"></span>
+            <input id="load" type="button" value="Load">
+            <textarea id="save_code"></textarea>
         </div>
     </div>
     
@@ -33,7 +35,6 @@
         <li class="type" data-id="{{id}}">
             <div>
                 <input type="color" value="{{color}}">
-                <span class="drag"></span>
                 <span class="close"></span>
             </div>
             <label>{{name}}</label>

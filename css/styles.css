@@ -24,6 +24,7 @@ li {
 li.type {
     background-color:#fff;
     height:50px;
+    width: 200px;
     position: relative;
     padding: 5px;
     border:solid #064d80 1px;
@@ -60,16 +61,6 @@ li.type input {
     top:2;
     right:2;
     font-size:12;
-}
-
-.drag {
-    width:40px;
-    height:30px;
-    background:url(../images/drag-icon.png);
-    position:absolute;
-    top:-5;
-    left:90;
-    cursor:move;
 }
 
 .helper {
