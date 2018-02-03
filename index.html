@@ -2,7 +2,7 @@
 
 <html>
 <head>
-	<title>Scheduler</title>
+	<title>Scheduler (dev)</title>
     <meta charset="UTF-8">
     <link rel="icon" href="images/star.ico">
     <link rel="stylesheet" href="css/styles.css" type="text/css">
@@ -11,6 +11,16 @@
 </head>
 <body>
     <h1>Scheduler 2.0</h1>
+    <label>Columns</label>
+    <select id="column_count">
+		<option value="1" selected>1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+    </select>
     <div class="main">
         <div id="hours" class="section"></div>
         <div class="section">
@@ -43,7 +53,12 @@
     </script>
     
     <script id="slot-template" type="text/x-handlebars-template">
-        <li class="{{cssClass}}" data-id="{{id}}" style="height:{{height}}px;background-color:{{color}}">
+        <li class="{{cssClass}}" data-id="{{id}}" style="
+			height:{{height}}px;
+			background-color:{{color}};
+			margin:{{margin}}px;
+			border:solid black {{border}}px;
+		">
             {{#unless empty}}
                 <span class="close"></span>
                 <label>{{name}}</label>

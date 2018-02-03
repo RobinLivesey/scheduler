@@ -2,20 +2,23 @@
 
 var scheduler = {
     
-    columns: 3,
+    columns: 1,
     
     hourStart: 7,
     hourEnd: 22,
     
-    slotHeight: 20,
+    
+    slotsPerHour: 3,
+    slotHeight: 18,
     slotBorder: 1,
     slotMargin: 1,
     
     slots: {},
     types: {},
     
-    init: function() {
+    init: function(columns) {
         var that = this;
+        this.columns = columns;
         
         this.setHoursHTML();
         this.setColumnsHTML();
@@ -28,8 +31,9 @@ var scheduler = {
             }
         });
         
+        //Fill the columns with empty slots if none exist yet
         if (!Object.keys(this.slots).length) {
-            this.createEmptySlots((this.hourEnd - this.hourStart + 1) * 3);
+            this.createEmptySlots((this.hourEnd - this.hourStart + 1) * this.slotsPerHour);
         }
         
         this.setSlotsHTML();
@@ -62,8 +66,13 @@ var scheduler = {
             }
         });
         
-        //var code = '{"t":[[1,"Scheduler improvements","#90EE90",1],[2,"Math course","#8bc7ea",2],[3,"Advent of code","#f25c5c",3],[4,"Reading","#f6c442",4],[5,"Research","#f07bef",5]],"s":[[34,27,1,2,0],[36,28,3,2,0],[40,31,4,1,0],[55,25,5,2,0],[57,24,2,2,0],[60,21,4,1,0],[74,18,3,2,0],[81,14,1,3,0],[87,15,2,2,0],[89,20,1,2,0]]}';
-        //this.load(code);
+        //Change the number of columns
+        $('#column_count').off().on('click', function() {
+			that.slots = {};
+			
+			var columns = $(this).val();
+			that.init(columns);
+		})
     },
     
     createSaveCode: function() {
@@ -145,7 +154,7 @@ var scheduler = {
         }
         
         //Re-init
-        this.init();
+        this.init(this.columns);
     },
     
     getNextTypeId: function() {
@@ -274,12 +283,14 @@ var scheduler = {
             slot.cssClass = 'empty';
         }
         
-        //Get slot height
+        //Get slot dimensions
         if (slot.size) {
             slot.height = (this.slotHeight * slot.size) + (this.slotMargin * (slot.size - 1)) + (this.slotBorder * 2 * (slot.size - 1));
         } else {
             slot.height = this.slotHeight;
         }
+        slot.border = this.slotBorder;
+        slot.margin = this.slotMargin;
         
         return slot;
     },
@@ -466,8 +477,12 @@ var scheduler = {
     
     setHoursHTML: function() {
         var html = '';
+        
+        //slots(heights + borders + margins) - hours(padding + borders)
+        var height = (this.slotHeight * this.slotsPerHour) + (this.slotBorder * 2 * this.slotsPerHour) + (this.slotMargin * (this.slotsPerHour - 1)) - 5 - 2;
+                
         for (var i = this.hourStart; i <= this.hourEnd; i++) {
-            html += '<div class="hour">' + i + ':00</div>';
+            html += '<div class="hour" style="height:' + height + 'px;margin:' + this.slotMargin + '">' + i + ':00</div>';
         }
         $('#hours').html(html);
     },
@@ -482,4 +497,6 @@ var scheduler = {
     
 };
 
-scheduler.init();
+var columns = $('#column_count').val();
+
+scheduler.init(columns);
