@@ -4,40 +4,68 @@
 <head>
 	<title>Scheduler (dev)</title>
     <meta charset="UTF-8">
-    <link rel="icon" href="images/star.ico">
+    <link rel="icon" href="images/hourglass.png">
     <link rel="stylesheet" href="css/styles.css" type="text/css">
     <link rel="stylesheet" href="libs/jquery-ui-1.12.1.custom/jquery-ui.min.css" type="text/css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 </head>
 <body>
-    <h1>Scheduler 2.0</h1>
-    <label>Columns</label>
-    <select id="column_count">
-		<option value="1" selected>1</option>
-		<option value="2">2</option>
-		<option value="3">3</option>
-		<option value="4">4</option>
-		<option value="5">5</option>
-		<option value="6">6</option>
-		<option value="7">7</option>
-    </select>
-    <div class="main">
-        <div id="hours" class="section"></div>
-        <div class="section">
-            <div id="slots"></div>
-        </div>
-        <div class="section">
-            <ul id="types"></ul>
-        </div>
-        <div class="section">
-            <input id="new_type" type="text">
-            <input id="add_new_type" type="button" value="Add">
-        </div>
-        <div class="section">
-            <input id="save" type="button" value="Save">
-            <input id="load" type="button" value="Load">
-            <textarea id="save_code"></textarea>
-        </div>
+	<!-- Side nav -->
+	<div id="mySideNav" class="sidenav">
+		<h1>Options</h1>
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<div class="tab">
+			<button id="defaultOpen" class="tablinks types" onclick="openTab(event, 'types_tab')"></button>
+			<button class="tablinks save" onclick="openTab(event, 'save_tab')"></button>
+			<button class="tablinks config" onclick="openTab(event, 'config_tab')"></button>
+		</div>
+		<div id="types_tab" class="tabcontent">
+			<div class="type_options">
+				<input id="new_type" type="text" placeholder="Category name">
+				<input id="add_new_type" type="button" value="Add" class="button">
+			</div>
+			<ul id="types"></ul>
+		</div>
+		<div id="save_tab" class="tabcontent">
+			<div class="save_options">
+				<input id="save" type="button" value="Save" class="button">
+				<input id="load" type="button" value="Load" class="button">
+			</div>
+			<textarea id="save_code" placeholder="How to load:&#10;Paste your code here&#10;and click load&#10;&#10;How to save:&#10;Click save and copy the&#10;code"></textarea>
+		</div>
+		<div id="config_tab" class="tabcontent">
+			<div class="config_options">
+				<div>
+					<label>Columns</label>
+					<select id="column_count">
+						<option value="1" selected>1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+						<option value="7">7</option>
+					</select>
+				</div>
+				<div>
+					<input id="show_hours_per_column" type="checkbox">
+					<label for="show_hours_per_column">Show hours per column</label>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<span class="open_nav" onclick="openNav()"></span>
+	
+	<!-- Main -->
+	<div id="main">
+		<h1>Scheduler 2.0</h1>
+		<div class="timetable">
+			<div id="hours" class="section"></div>
+			<div class="section">
+				<div id="slots"></div>
+			</div>
+		</div>
     </div>
     
     <!-- templates -->
@@ -45,10 +73,18 @@
         <li class="type" data-id="{{id}}">
             <div>
                 <input type="color" value="{{color}}">
+                {{#if edit}}
+					<span class="tbutton end_rename"></span>
+				{{else}}
+					<span class="tbutton start_rename"></span>
+				{{/if}}
                 <span class="close"></span>
             </div>
-            <label>{{name}}</label>
-            
+            {{#if edit}}
+				<input id="new_type_name_{{id}}" type="text" value="{{name}}">
+			{{else}}
+				<label>{{name}}</label>
+			{{/if}}
         </li>
     </script>
     
@@ -57,7 +93,7 @@
 			height:{{height}}px;
 			background-color:{{color}};
 			margin:{{margin}}px;
-			border:solid black {{border}}px;
+			border-width:{{border}}px;
 		">
             {{#unless empty}}
                 <span class="close"></span>

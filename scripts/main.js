@@ -1,12 +1,46 @@
 'use strict';
 
+//Side-panel
+function openNav() {
+	document.getElementById("mySideNav").style.left = "0";
+	document.getElementById("main").style.marginLeft = "250px";
+}
+
+function closeNav() {
+	document.getElementById("mySideNav").style.left = "-250px";
+	document.getElementById("main").style.marginLeft = "0";
+}
+
+//Side-panel tabs
+function openTab(evt, tab) {
+	var i, tabcontent, tablinks;
+	
+	tabcontent = document.getElementsByClassName("tabcontent");
+	for (i = 0; i < tabcontent.length; i++) {
+		tabcontent[i].style.display = "none";
+	}
+	
+	tablinks = document.getElementsByClassName("tablinks");
+	for (i = 0; i < tablinks.length; i++) {
+		tablinks[i].className = tablinks[i].className.replace(" active", "");
+	}
+	
+	document.getElementById(tab).style.display = "block";
+	evt.currentTarget.className += " active";
+}
+document.getElementById("defaultOpen").click();
+
+
+
+//Main
+
 var scheduler = {
     
     columns: 1,
+    showHoursPerColumn: false,
     
-    hourStart: 7,
+    hourStart: 6,
     hourEnd: 22,
-    
     
     slotsPerHour: 3,
     slotHeight: 18,
@@ -16,9 +50,8 @@ var scheduler = {
     slots: {},
     types: {},
     
-    init: function(columns) {
+    init: function() {
         var that = this;
-        this.columns = columns;
         
         this.setHoursHTML();
         this.setColumnsHTML();
@@ -69,9 +102,14 @@ var scheduler = {
         //Change the number of columns
         $('#column_count').off().on('click', function() {
 			that.slots = {};
-			
-			var columns = $(this).val();
-			that.init(columns);
+			that.columns = $(this).val();
+			that.init();
+		});
+		
+		$('#show_hours_per_column').off().on('change', function() {
+			var value = $(this).is(':checked');
+			that.showHoursPerColumn = value;
+			that.init();
 		})
     },
     
@@ -154,7 +192,7 @@ var scheduler = {
         }
         
         //Re-init
-        this.init(this.columns);
+        this.init();
     },
     
     getNextTypeId: function() {
@@ -163,7 +201,8 @@ var scheduler = {
     },
     
     createType: function(name) {
-        var type = {name: name, color: '#90EE90'};
+		var randomColor = "#000000".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
+        var type = {name: name, color: randomColor};
         var id = this.getNextTypeId();
         
         //Set ord to last
@@ -225,7 +264,10 @@ var scheduler = {
                     style: 'background-color:' + that.types[typeId].color
                 });
             },
-            cursorAt: {top:10, left: 0}
+            cursorAt: {top:10, left: 0},
+			containment: 'document',
+			zIndex: 10000,
+			appendTo: 'body'
         });
         
         $('#types .type .close').on('click', function() {
@@ -245,6 +287,22 @@ var scheduler = {
             
             that.setSlotsHTML();
         });
+        
+        $('#types .start_rename').on('click', function() {
+			var typeId = $(this).parent().parent().data('id');
+			that.types[typeId].edit = true;
+			
+			that.setTypesHTML();
+		});
+		
+		$('#types .end_rename').on('click', function() {
+			var typeId = $(this).parent().parent().data('id');
+			that.types[typeId].edit = false;
+			that.types[typeId].name = $('#new_type_name_' + typeId).val();
+			
+			that.setTypesHTML();
+			that.setSlotsHTML();
+		});
     },
     
     getNextSlotId: function() {
@@ -475,8 +533,8 @@ var scheduler = {
         }
     },
     
-    setHoursHTML: function() {
-        var html = '';
+    getHoursHTML: function() {
+		var html = '';
         
         //slots(heights + borders + margins) - hours(padding + borders)
         var height = (this.slotHeight * this.slotsPerHour) + (this.slotBorder * 2 * this.slotsPerHour) + (this.slotMargin * (this.slotsPerHour - 1)) - 5 - 2;
@@ -484,12 +542,20 @@ var scheduler = {
         for (var i = this.hourStart; i <= this.hourEnd; i++) {
             html += '<div class="hour" style="height:' + height + 'px;margin:' + this.slotMargin + '">' + i + ':00</div>';
         }
+        return html;
+	},
+    
+    setHoursHTML: function() {
+        var html = this.getHoursHTML();
         $('#hours').html(html);
     },
     
     setColumnsHTML: function() {
         var html = '';
         for (var i = 0; i < this.columns; i++) {
+			if (i != 0 && this.showHoursPerColumn) {
+				html += '<div class="hours_reminder">' + this.getHoursHTML() + '</div>';
+			}
             html += '<ul id="column_' + i + '"></ul>';
         }
         $('#slots').html(html);
@@ -497,6 +563,5 @@ var scheduler = {
     
 };
 
-var columns = $('#column_count').val();
 
-scheduler.init(columns);
+scheduler.init();

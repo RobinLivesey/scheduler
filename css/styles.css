@@ -1,40 +1,14 @@
+/* General styles */
+
 h1, h2, h3, h4, h5, h6, p, span, div, input, label {
     font-family: 'Roboto';
 }
 
 ul {
+	margin: 0;
     padding:0;
-    margin:0;
     display: inline-block;
-    padding-right:10px;
-}
-
-li {
-    list-style:none;
-    height:20px;
-    margin:1px;
-    border:solid black 1px;
-    cursor:move;
-    width:150px;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    overflow:hidden;
-}
-
-li.type {
-    background-color:#fff;
-    height:50px;
-    width: 200px;
-    position: relative;
-    padding: 5px;
-    border:solid #064d80 1px;
-    border-radius:3px;
-    background-color: #c4dff3;
-    cursor:default;
-}
-
-li.type input {
-    cursor:pointer;
+    padding-right:5px;
 }
 
 .close {
@@ -55,14 +29,6 @@ li.type input {
   top:-1px;
 }
 
-.item .close {
-    width:15px;
-    height:15px;
-    top:2;
-    right:2;
-    font-size:12;
-}
-
 .helper {
     padding:5px;
     border:solid 1px black;
@@ -73,33 +39,66 @@ li.type input {
     overflow: hidden;
 }
 
-li.item:hover {
+/* Main styles */
+
+#main h1 {
+	padding-left: 50;
+	background: url("../images/hourglass.svg") no-repeat;
+}
+
+#main li {
+    list-style:none;
+    height:20px;
+    margin:1px;
+    border:solid black 1px;
+    cursor:move;
+    width:150px;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    overflow:hidden;
+}
+
+#main div.hours_reminder {
+	display: inline-block;
+	padding-right:5px;
+	vertical-align:top;
+}
+
+#main .item .close {
+    width:15px;
+    height:15px;
+    top:2;
+    right:2;
+    font-size:12;
+}
+
+#main li.item:hover {
     background-color:yellow;
 }
 
-li.empty {
+#main li.empty {
     background-color:#ddd;
     border-color:#eee;
     cursor:default;
 }
 
-li.over {
+#main li.over {
     border: 1px solid #dad55e;
 	background: #fffa90;
 	color: #777620;
 }
 
-div.main {
+#main .timetable {
     white-space:nowrap;
 }
 
-div.section {
+#main .timetable .section {
     display:inline-block;
     white-space:nowrap;
     vertical-align:top;
 }
 
-div.hour {
+#main .timetable .section .hour {
     width:50px;
     margin:1px;
     border:solid black 1px;
@@ -107,3 +106,190 @@ div.hour {
     padding-top:5px;
     padding-left:5px;
 }
+
+/* Side-nav styles */
+
+.sidenav {
+	height: 100%;
+	width: 250;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: #111;
+	overflow-x: hidden;
+	padding-top: 60px;
+	transition: 0.5s;
+}
+
+.sidenav a {
+	padding: 4 8 8 32;
+	text-decoration: none;
+	font-size: 25px;
+	color: #818181;
+	display: block;
+	transition: 0.3s;
+}
+
+.sidenav .closebtn {
+	position: absolute;
+	top: 0;
+	right: 25px;
+	font-size: 36px;
+	margin-left: 50px;
+}
+
+.open_nav {
+    width: 20px;
+    height: 51px;
+    top: 9;
+    left: 0;
+    position: absolute;
+    background-color: #101010;
+    cursor: pointer;
+}
+
+#main {
+	margin-left: 250;
+	transition: margin-left .5s;
+	padding: 0 20 20 20;
+}
+
+.sidenav li.type {
+    background-color: #fff;
+    height: 50px;
+    width: 215px;
+    position: relative;
+    padding: 5px;
+    border: solid #064d80 1px;
+    border-radius: 3px;
+    background-color: #c4dff3;
+    cursor: default;
+    text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+
+}
+
+.sidenav li.type input[type="color"] {
+    cursor: pointer;
+}
+
+.sidenav li.type .tbutton {
+	width: 15;
+	height: 15;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.sidenav li.type .start_rename {
+	background: url("../images/text-edit-cursor.svg") no-repeat;
+}
+
+.sidenav li.type .end_rename {
+	background: url("../images/tick.svg") no-repeat;
+}
+
+.sidenav .tab {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+}
+
+.sidenav .tab button {
+	width: 33.33%;
+	background-color: inherit;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	transition: 0.3s;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 22px;
+}
+
+.sidenav .tab button:hover {
+	background-color: #ddd;
+}
+
+.sidenav .tab button.active {
+	background-color: #ccc;
+}
+
+.sidenav .tab button.types {
+	background-image: url("../images/layers.svg");
+}
+
+.sidenav .tab button.save {
+	background-image: url("../images/save.svg");
+}
+
+
+.sidenav .tab button.config {
+	background-image: url("../images/settings-gears.svg");
+}
+
+
+.sidenav .tabcontent {
+	display: none;
+	padding: 6px 12px;
+}
+
+.sidenav #new_type {
+	width: 167px;
+}
+
+.sidenav .button {
+	border: none;
+    color: white;
+    padding: 3px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.sidenav .save_options input {
+	width: 49%;
+}
+
+.sidenav #add_new_type {
+	background-color: #4CAF50;
+}
+.sidenav #save {
+	background-color: #af4c4c;
+}
+.sidenav #load {
+	background-color: #4c86af;
+}
+
+.sidenav .type_options,
+.sidenav .save_options {
+	margin-bottom: 6px;
+}
+
+.sidenav .config_options {
+	background: #fff;
+}
+
+.sidenav .config_options div {
+	padding: 5;
+}
+
+.sidenav #save_code {
+	word-break: break-all;
+	width: 225;
+	height: 200;
+	resize: none;
+}
+
+.sidenav h1 {
+	position: absolute;
+	margin: 7px 20px;
+	top: 0;
+	left: 0;
+	color: white;
+}
+
+
